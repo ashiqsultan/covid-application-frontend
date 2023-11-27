@@ -13,7 +13,7 @@ const MainMap: React.FC = () => {
   const state = useContext(AppContext).state;
   useEffect(() => {
     console.log(state);
-  }, []);
+  }, [state.worldData]);
   return (
     <>
       <MapContainer
