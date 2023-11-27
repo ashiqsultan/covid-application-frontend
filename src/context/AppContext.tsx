@@ -1,9 +1,13 @@
 import { createContext, useReducer, useEffect, useCallback } from 'react';
 import { getAllDeath, getAllConfirmed } from '../api';
-
+import countryLatLngHash from '../countryLatLngHash';
 interface IWorldDataItem {
   name: string;
-  deaths: number;
+  count: number;
+  lat: number;
+  lng: number;
+  deaths?: number;
+  confirmed?: number;
 }
 export interface IAppState {
   category: 'death' | 'confirmed';
@@ -55,6 +59,14 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
 
   const setWorldData = useCallback(
     (data: Array<IWorldDataItem>) => {
+      // Using country name map to lat lng from lat lng hash
+      data.forEach((item) => {
+        // @ts-ignore
+        const { lat, lng } = countryLatLngHash[item.name];
+        item.lat = lat;
+        item.lng = lng;
+        item.count = item.deaths || item.confirmed || 0;
+      });
       dispatch({ type: 'SET_WORLD_DATA', payload: data });
     },
     [dispatch]

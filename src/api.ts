@@ -11,7 +11,7 @@ const api = axios.create({
 export const getAllDeath = async () => {
   try {
     const response = await api.get('/country/death');
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error(error);
   }
@@ -19,7 +19,7 @@ export const getAllDeath = async () => {
 export const getAllConfirmed = async () => {
   try {
     const response = await api.get('/country/confirmed');
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error(error);
   }

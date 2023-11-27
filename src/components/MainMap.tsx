@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react';
-// import L, { LatLng } from 'leaflet';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import React, { useContext } from 'react';
+
+import { Circle, MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AppContext } from '../context/AppContext';
 
@@ -9,11 +9,19 @@ const mapContainerStyle = {
   height: '80vh',
 };
 
+const calculateRadius = (count: number) => {
+  const minRadius = 25000;
+  if (count < 1000) {
+    return minRadius;
+  } else {
+    return Math.sqrt(count) * 3000;
+  }
+};
+
 const MainMap: React.FC = () => {
   const state = useContext(AppContext).state;
-  useEffect(() => {
-    console.log(state);
-  }, [state.worldData]);
+  const worldData = state.worldData;
+
   return (
     <>
       <MapContainer
@@ -27,6 +35,14 @@ const MainMap: React.FC = () => {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
+        {worldData.map((country, index) => (
+          <Circle
+            key={index}
+            center={[country.lat, country.lng]}
+            pathOptions={{ color: 'red' }}
+            radius={calculateRadius(country.count)}
+          />
+        ))}
       </MapContainer>
     </>
   );
