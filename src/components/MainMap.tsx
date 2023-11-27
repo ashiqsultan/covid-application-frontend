@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 // import L, { LatLng } from 'leaflet';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { AppContext } from '../context/AppContext';
 
 const mapContainerStyle = {
   width: '100%',
@@ -9,6 +10,10 @@ const mapContainerStyle = {
 };
 
 const MainMap: React.FC = () => {
+  const state = useContext(AppContext).state;
+  useEffect(() => {
+    console.log(state);
+  }, []);
   return (
     <>
       <MapContainer
