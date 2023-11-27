@@ -1,10 +1,10 @@
-import { Typography } from "@mui/material";
+import MainMap from '../components/MainMap';
 
 const HomePage: React.FC = () => {
   return (
-    <div>
-      <Typography variant="h1">Home</Typography>
-    </div>
+    <>
+      <MainMap />
+    </>
   );
 };
 
