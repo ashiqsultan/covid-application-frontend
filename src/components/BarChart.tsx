@@ -75,7 +75,7 @@ const BarChart: React.FC = () => {
         marginTop: '2rem',
       }}
     >
-      <Bar options={options} data={chartData} />;
+      <Bar options={options} data={chartData} />
     </Box>
   );
 };
