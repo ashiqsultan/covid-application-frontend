@@ -2,12 +2,15 @@ import { Box, Typography } from '@mui/material';
 import InfoCard from './InfoCard';
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
+import FallbackBox from './FallbackBox';
 
 const OtherInfo = () => {
   const { state } = useContext(AppContext);
   const { countryInfo } = state;
   if (!countryInfo || Object.keys(countryInfo).length === 0) {
-    return null;
+    return (
+      <FallbackBox text={'Select a country to view country specific data'} />
+    );
   }
   return (
     <Box display={'flex'} flexDirection={'column'} rowGap={'1rem'}>

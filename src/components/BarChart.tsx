@@ -11,7 +11,8 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import FallbackBox from './FallbackBox';
 
 ChartJS.register(
   CategoryScale,
@@ -60,11 +61,7 @@ const BarChart: React.FC = () => {
   }, [countryInfo]);
 
   if (!countryInfo || !chartData) {
-    return (
-      <Typography variant='body1'>
-        Select a country to view the chart
-      </Typography>
-    );
+    return <FallbackBox text='Select a country to view chart ' />;
   }
   return (
     <Box
