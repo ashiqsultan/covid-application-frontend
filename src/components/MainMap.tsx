@@ -10,7 +10,7 @@ const mapContainerStyle = {
 };
 
 const MainMap: React.FC = () => {
-  const state = useContext(AppContext).state;
+  const { state, setSelectedCountry } = useContext(AppContext);
   const worldData = state.worldData;
 
   // State to manage the popup
@@ -39,6 +39,7 @@ const MainMap: React.FC = () => {
   // Function to handle click and open the popup
   const handleCircleClick = (event: any, country: any) => {
     setSelectedCountryName(country.name);
+    setSelectedCountry(country.name);
     setPopup({
       position: [country.lat, country.lng],
       isOpen: true,
