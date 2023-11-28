@@ -6,7 +6,7 @@ import { Typography, Box } from '@mui/material';
 
 const mapContainerStyle = {
   width: '100%',
-  height: '80vh',
+  height: '100%',
 };
 
 const MainMap: React.FC = () => {
