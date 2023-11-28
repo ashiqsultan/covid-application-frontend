@@ -12,6 +12,7 @@ interface IWorldDataItem {
 export interface IAppState {
   category: 'death' | 'confirmed';
   worldData: Array<IWorldDataItem>;
+  selectedCountry?: string;
 }
 
 type Action =
@@ -22,11 +23,16 @@ type Action =
   | {
       type: 'SET_WORLD_DATA';
       payload: Array<IWorldDataItem>;
+    }
+  | {
+      type: 'SET_SELECTED_COUNTRY';
+      payload: string;
     };
 
 const initialState: IAppState = {
   category: 'death',
   worldData: [],
+  selectedCountry: '',
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -41,6 +47,11 @@ const reducer = (state: IAppState, action: Action): IAppState => {
         ...state,
         worldData: action.payload,
       };
+    case 'SET_SELECTED_COUNTRY':
+      return {
+        ...state,
+        selectedCountry: action.payload,
+      };
     default:
       return state;
   }
@@ -49,9 +60,11 @@ const reducer = (state: IAppState, action: Action): IAppState => {
 export const AppContext = createContext<{
   state: IAppState;
   dispatch: React.Dispatch<Action>;
+  setSelectedCountry: (country: string) => void;
 }>({
   state: initialState,
   dispatch: () => null,
+  setSelectedCountry: () => null,
 });
 
 export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
@@ -68,6 +81,12 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
         item.count = item.deaths || item.confirmed || 0;
       });
       dispatch({ type: 'SET_WORLD_DATA', payload: data });
+    },
+    [dispatch]
+  );
+  const setSelectedCountry = useCallback(
+    (country: string) => {
+      dispatch({ type: 'SET_SELECTED_COUNTRY', payload: country });
     },
     [dispatch]
   );
@@ -88,6 +107,7 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
       value={{
         state,
         dispatch,
+        setSelectedCountry,
       }}
     >
       {children}

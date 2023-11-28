@@ -7,7 +7,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { AppContext } from '../context/AppContext';
 
 export default function Filters() {
-  const { state, dispatch } = useContext(AppContext);
+  const { state, dispatch, setSelectedCountry } = useContext(AppContext);
+  const worldData = state.worldData;
 
   const handleChange = (event: SelectChangeEvent) => {
     dispatch({
@@ -18,7 +19,13 @@ export default function Filters() {
   };
 
   return (
-    <Box sx={{ minWidth: 100 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        rowGap: '2rem',
+      }}
+    >
       <FormControl fullWidth>
         <InputLabel id='select-category'>Category</InputLabel>
         <Select
@@ -29,6 +36,21 @@ export default function Filters() {
         >
           <MenuItem value={'death'}>Death</MenuItem>
           <MenuItem value={'confirmed'}>Confirmed</MenuItem>
+        </Select>
+      </FormControl>
+      <FormControl fullWidth>
+        <InputLabel id='select-country'>Country</InputLabel>
+        <Select
+          labelId='select-country'
+          value={state.selectedCountry}
+          label='Country'
+          onChange={(event) => {
+            setSelectedCountry(event.target.value as string);
+          }}
+        >
+          {worldData.map((item) => (
+            <MenuItem value={item.name}>{item.name}</MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>
