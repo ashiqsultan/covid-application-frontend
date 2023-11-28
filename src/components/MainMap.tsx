@@ -1,5 +1,5 @@
-import React, { useContext, useState, useCallback } from 'react';
-import { Circle, MapContainer, TileLayer, Popup } from 'react-leaflet';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import { Circle, MapContainer, TileLayer, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AppContext } from '../context/AppContext';
 import { Typography, Box } from '@mui/material';
@@ -9,10 +9,21 @@ const mapContainerStyle = {
   height: '100%',
 };
 
+const Recenter = ({ center }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(center, 4);
+  }, [center]);
+  return null;
+};
+
 const MainMap: React.FC = () => {
   const { state, setSelectedCountry } = useContext(AppContext);
   const worldData = state.worldData;
-
+  const selectedCountry = state.selectedCountry;
+  const [mapCenter, setMapCenter] = useState<[number, number]>([
+    20.5937, 78.9629,
+  ]);
   // State to manage the popup
   const [popup, setPopup] = useState<{
     position: [number, number];
@@ -46,6 +57,17 @@ const MainMap: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    if (selectedCountry) {
+      const countryData = worldData.find(
+        (country) => country.name === selectedCountry
+      );
+      if (countryData) {
+        setMapCenter([countryData.lat, countryData.lng]);
+      }
+    }
+  }, [selectedCountry]);
+
   return (
     <>
       <MapContainer
@@ -55,6 +77,7 @@ const MainMap: React.FC = () => {
         zoom={3}
         scrollWheelZoom={true}
       >
+        <Recenter center={mapCenter} />
         <TileLayer
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
