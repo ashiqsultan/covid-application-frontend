@@ -2,9 +2,9 @@ import { Card, Typography } from '@mui/material';
 import React from 'react';
 
 const InfoCard: React.FC<{
-  number: number;
-  description: string;
-}> = ({ number, description }) => {
+  number?: number;
+  description?: string;
+}> = ({ number = 0, description = '' }) => {
   return (
     <Card
       sx={{
