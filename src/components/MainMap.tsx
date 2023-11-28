@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-
-import { Circle, MapContainer, TileLayer } from 'react-leaflet';
+import React, { useContext, useState } from 'react';
+import { Circle, MapContainer, TileLayer, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AppContext } from '../context/AppContext';
+import { Typography, Box } from '@mui/material';
 
 const mapContainerStyle = {
   width: '100%',
@@ -21,6 +21,25 @@ const calculateRadius = (count: number) => {
 const MainMap: React.FC = () => {
   const state = useContext(AppContext).state;
   const worldData = state.worldData;
+
+  // State to manage the popup
+  const [popup, setPopup] = useState<{
+    position: [number, number];
+    isOpen: boolean;
+  }>({
+    position: [0, 0],
+    isOpen: false,
+  });
+  const [selectedCountryName, setSelectedCountryName] = useState<string>('');
+
+  // Function to handle click and open the popup
+  const handleCircleClick = (event: any, country: any) => {
+    setSelectedCountryName(country.name);
+    setPopup({
+      position: [country.lat, country.lng],
+      isOpen: true,
+    });
+  };
 
   return (
     <>
@@ -41,8 +60,22 @@ const MainMap: React.FC = () => {
             center={[country.lat, country.lng]}
             pathOptions={{ color: 'red' }}
             radius={calculateRadius(country.count)}
-          />
+            eventHandlers={{
+              click: (event) => handleCircleClick(event, country),
+            }}
+          ></Circle>
         ))}
+        {popup.isOpen && (
+          <Popup position={popup.position}>
+            <Box
+              sx={{
+                textAlign: 'center',
+              }}
+            >
+              <Typography variant='h6'>{selectedCountryName}</Typography>
+            </Box>
+          </Popup>
+        )}
       </MapContainer>
     </>
   );
