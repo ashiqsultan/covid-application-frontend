@@ -3,20 +3,12 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { AppContext } from '../context/AppContext';
 
 export default function Filters() {
-  const { state, dispatch, setSelectedCountry } = useContext(AppContext);
+  const { state, setCategory, setSelectedCountry } = useContext(AppContext);
   const worldData = state.worldData;
-
-  const handleChange = (event: SelectChangeEvent) => {
-    dispatch({
-      type: 'SET_CATEGORY',
-      // @ts-ignore
-      payload: event.target.value,
-    });
-  };
 
   return (
     <Box
@@ -32,7 +24,9 @@ export default function Filters() {
           labelId='select-category'
           value={state.category}
           label='Category'
-          onChange={handleChange}
+          onChange={(event) => {
+            setCategory(event.target.value as string);
+          }}
         >
           <MenuItem value={'death'}>Death</MenuItem>
           <MenuItem value={'confirmed'}>Confirmed</MenuItem>

@@ -61,10 +61,12 @@ export const AppContext = createContext<{
   state: IAppState;
   dispatch: React.Dispatch<Action>;
   setSelectedCountry: (country: string) => void;
+  setCategory: (category: string) => void;
 }>({
   state: initialState,
   dispatch: () => null,
   setSelectedCountry: () => null,
+  setCategory: () => null,
 });
 
 export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
@@ -91,6 +93,14 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
     [dispatch]
   );
 
+  const setCategory = useCallback(
+    (category: string) => {
+      // @ts-ignore
+      dispatch({ type: 'SET_CATEGORY', payload: category });
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     const fetchAndSetInitialData = async () => {
       const data =
@@ -108,6 +118,7 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
         state,
         dispatch,
         setSelectedCountry,
+        setCategory,
       }}
     >
       {children}
