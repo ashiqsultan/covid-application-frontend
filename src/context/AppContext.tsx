@@ -81,7 +81,7 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
       setWorldData(data);
     };
     fetchAndSetInitialData();
-  }, []);
+  }, [state.category]);
 
   return (
     <AppContext.Provider

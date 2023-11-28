@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { Circle, MapContainer, TileLayer, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AppContext } from '../context/AppContext';
@@ -7,15 +7,6 @@ import { Typography, Box } from '@mui/material';
 const mapContainerStyle = {
   width: '100%',
   height: '80vh',
-};
-
-const calculateRadius = (count: number) => {
-  const minRadius = 25000;
-  if (count < 1000) {
-    return minRadius;
-  } else {
-    return Math.sqrt(count) * 3000;
-  }
 };
 
 const MainMap: React.FC = () => {
@@ -31,6 +22,19 @@ const MainMap: React.FC = () => {
     isOpen: false,
   });
   const [selectedCountryName, setSelectedCountryName] = useState<string>('');
+
+  const calculateRadius = useCallback(
+    (count: number) => {
+      const minRadius = 25000;
+      if (count < 1000) return minRadius;
+      if (state.category === 'death') {
+        return Math.sqrt(count) * 3000;
+      } else {
+        return Math.sqrt(count) * 1000;
+      }
+    },
+    [state.category]
+  );
 
   // Function to handle click and open the popup
   const handleCircleClick = (event: any, country: any) => {
