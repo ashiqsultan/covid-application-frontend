@@ -24,3 +24,11 @@ export const getAllConfirmed = async () => {
     console.error(error);
   }
 };
+export const getByCountry = async (country: string) => {
+  try {
+    const response = await api.get(`/country/${country}`);
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

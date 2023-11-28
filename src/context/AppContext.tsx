@@ -1,5 +1,5 @@
 import { createContext, useReducer, useEffect, useCallback } from 'react';
-import { getAllDeath, getAllConfirmed } from '../api';
+import { getAllDeath, getAllConfirmed, getByCountry } from '../api';
 import countryLatLngHash from '../countryLatLngHash';
 interface IWorldDataItem {
   name: string;
@@ -9,10 +9,28 @@ interface IWorldDataItem {
   deaths?: number;
   confirmed?: number;
 }
+interface ICountryInfo {
+  name?: string;
+  confirmed?: number;
+  deaths?: number;
+  recovered?: number;
+  active?: number;
+  new_cases?: number;
+  new_deaths?: number;
+  new_recovered?: number;
+  deaths_per_100_cases?: number;
+  recovered_per_100_cases?: number;
+  deaths_per_100_recovered?: number;
+  confirmed_last_week?: number;
+  one_week_change?: number;
+  one_week_percent_increase?: number;
+  who_region?: string;
+}
 export interface IAppState {
   category: 'death' | 'confirmed';
   worldData: Array<IWorldDataItem>;
   selectedCountry?: string;
+  countryInfo?: ICountryInfo;
 }
 
 type Action =
@@ -27,12 +45,17 @@ type Action =
   | {
       type: 'SET_SELECTED_COUNTRY';
       payload: string;
+    }
+  | {
+      type: 'SET_COUNTRY_INFO';
+      payload: ICountryInfo;
     };
 
 const initialState: IAppState = {
   category: 'death',
   worldData: [],
   selectedCountry: '',
+  countryInfo: {},
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -51,6 +74,11 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return {
         ...state,
         selectedCountry: action.payload,
+      };
+    case 'SET_COUNTRY_INFO':
+      return {
+        ...state,
+        countryInfo: action.payload,
       };
     default:
       return state;
@@ -102,15 +130,23 @@ export const AppProvider: React.FC<{ children: any }> = ({ children }) => {
   );
 
   useEffect(() => {
-    const fetchAndSetInitialData = async () => {
+    const fetchAndSetCountryInfo = async () => {
+      const countryInfo = await getByCountry(state.selectedCountry || '');
+      dispatch({ type: 'SET_COUNTRY_INFO', payload: countryInfo });
+    };
+    fetchAndSetCountryInfo();
+  }, [state.selectedCountry]);
+
+  useEffect(() => {
+    const fetchAndSetWorldData = async () => {
       const data =
         state.category === 'death'
           ? await getAllDeath()
           : await getAllConfirmed();
       setWorldData(data);
     };
-    fetchAndSetInitialData();
-  }, [state.category]);
+    fetchAndSetWorldData();
+  }, []);
 
   return (
     <AppContext.Provider
