@@ -9,6 +9,7 @@ const mapContainerStyle = {
   height: '100%',
 };
 
+// @ts-ignore
 const Recenter = ({ center }) => {
   const map = useMap();
   useEffect(() => {
@@ -48,7 +49,7 @@ const MainMap: React.FC = () => {
   );
 
   // Function to handle click and open the popup
-  const handleCircleClick = (event: any, country: any) => {
+  const handleCircleClick = (_event: any, country: any) => {
     setSelectedCountryName(country.name);
     setSelectedCountry(country.name);
     setPopup({
