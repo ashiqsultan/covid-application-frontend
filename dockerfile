@@ -1,12 +1,10 @@
 FROM node:20-alpine AS builder
-ENV NODE_ENV production
 # Add a work directory
 WORKDIR /app
 # Cache and Install dependencies
 COPY package.json .
 COPY yarn.lock .
-# RUN yarn install --production
-RUN yarn
+RUN yarn install
 # Copy app files
 COPY . .
 # Build the app
@@ -14,7 +12,6 @@ RUN yarn build
 
 # Bundle static assets with nginx
 FROM nginx:1.21.0-alpine as production
-ENV NODE_ENV production
 # Copy built assets from dist
 COPY --from=builder /app/dist /usr/share/nginx/html
 # Add your nginx.conf
