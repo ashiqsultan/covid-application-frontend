@@ -61,7 +61,9 @@ const BarChart: React.FC = () => {
   }, [countryInfo]);
 
   if (!countryInfo || !chartData) {
-    return <FallbackBox text='Select a country to view chart ' />;
+    return (
+      <FallbackBox text='Select a country from map or dropdown to view charts' />
+    );
   }
   return (
     <Box
